@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<schema name="autoSolrSchema" version="1.5">
+    <types>
+        <fieldType class="org.apache.solr.schema.TextField" name="TextField">
+            <analyzer>
+                <tokenizer class="solr.StandardTokenizerFactory"/>
+                <filter class="solr.LowerCaseFilterFactory"/>
+            </analyzer>
+        </fieldType>
+        <fieldType class="org.apache.solr.schema.UUIDField" name="UUIDField"/>
+        <fieldType class="com.datastax.bdp.search.solr.core.types.SimpleDateField" name="SimpleDateField"/>
+        <fieldType class="org.apache.solr.schema.TrieDateField" name="TrieDateField"/>
+        <fieldType class="org.apache.solr.schema.TrieIntField" name="TrieIntField"/>
+        <fieldType class="org.apache.solr.schema.StrField" name="StringField"/>
+    </types>
+    <fields>
+        <field indexed="true" multiValued="false" name="first_name" stored="true" type="TextField"/>
+        <field indexed="true" multiValued="false" name="country_code" stored="true" type="StringField"/>
+        <field docValues="true" indexed="true" multiValued="false" name="account_id" stored="true" type="UUIDField"/>
+        <field docValues="true" indexed="true" multiValued="false" name="birthday" stored="true" type="SimpleDateField"/>
+        <field indexed="true" multiValued="false" name="locale" stored="true" type="StringField"/>
+        <field indexed="true" multiValued="false" name="email" stored="true" type="StringField"/>
+        <field docValues="true" indexed="true" multiValued="false" name="updated_date" stored="true" type="TrieDateField"/>
+        <field docValues="true" indexed="true" multiValued="false" name="created_date" stored="true" type="TrieDateField"/>
+        <field docValues="true" indexed="true" multiValued="false" name="age" stored="true" type="TrieIntField"/>
+        <field indexed="true" multiValued="false" name="last_name" stored="true" type="TextField"/>
+    </fields>
+    <uniqueKey>account_id</uniqueKey>
+</schema>
