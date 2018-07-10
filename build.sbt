@@ -17,7 +17,7 @@ resolvers ++= Seq(
 
 libraryDependencies ++= Seq(
   // Formerly in lib directory
-  "com.datastax.gatling.stress" %% "gatling-dse-stress" % "1.3.0",
+  "com.datastax.gatling.stress" %% "gatling-dse-stress" % "1.3.1",
 
   // From build.gradle
   "com.mashape.unirest" % "unirest-java" % "1.4.9",
