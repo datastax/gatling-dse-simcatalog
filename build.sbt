@@ -1,11 +1,5 @@
 import scala.sys.process._
 
-name := "gatling-dse-simcatalog"
-organization := "com.datastax.gatling.simcatalog"
-
-releaseUseGlobalVersion := false
-scalaVersion := "2.12.5"
-
 scalacOptions ++= Seq("-target:jvm-1.8", "-Ybreak-cycles")
 
 resolvers ++= Seq(
@@ -67,29 +61,52 @@ assemblyMergeStrategy in assembly := {
 mainClass in assembly := Some("com.datastax.gatling.stress.Starter")
 
 //
-// Releases should reuse credentials from other build systems
+// Releases should reuse credentials from other build systems.
 //
 // For Jenkins triggered releases, find them in the file denoted by the environment variable MAVEN_USER_SETTINGS_FILE
-// If it is missing, find them in ~/.m2/settings.xml
+// If it is missing, find them in ~/.m2/settings.xml.
 //
-val settingsXml = sys.env.getOrElse("MAVEN_USER_SETTINGS_FILE", System.getProperty("user.home") + "/.m2/settings.xml")
-val mavenSettings = scala.xml.XML.loadFile(settingsXml)
-val artifactory = mavenSettings \ "servers" \ "server" filter { node => (node \ "id").text == "artifactory" }
+// If there is no ~/.m2/settings.xml, do not add anything to the sbt configuration.
+//
+val lookupM2Settings = {
+  val settingsXml = sys.env.getOrElse("MAVEN_USER_SETTINGS_FILE", System.getProperty("user.home") + "/.m2/settings.xml")
+  if (new File(settingsXml).exists()) {
+    val mavenSettings = scala.xml.XML.loadFile(settingsXml)
+    val artifactory = mavenSettings \ "servers" \ "server" filter { node => (node \ "id").text == "artifactory" }
+    if (artifactory.nonEmpty) {
+      Seq(credentials += Credentials(
+        "Artifactory Realm",
+        "datastax.jfrog.io",
+        (artifactory \ "username").text,
+        (artifactory \ "password").text))
+    } else {
+      Seq.empty
+    }
+  } else {
+    Seq.empty
+  }
+}
+
 publishTo := {
   if (isSnapshot.value) {
-    Some("Artifactory Realm" at "http://datastax.jfrog.io/datastax/datastax-public-snapshots-local;" +
-      "build.timestamp=" + new java.util.Date().getTime)
+    Some("Artifactory Realm" at "http://datastax.jfrog.io/datastax/datastax-public-snapshots-local;build.timestamp=" + new java.util.Date().getTime)
   } else {
     Some("Artifactory Realm" at "http://datastax.jfrog.io/datastax/datastax-public-releases-local")
   }
 }
-credentials += Credentials(
-  "Artifactory Realm",
-  "datastax.jfrog.io",
-  (artifactory \ "username").text,
-  (artifactory \ "password").text)
 
-lazy val assemblyLauncher = taskKey[Int]("Echo task")
+lazy val root = (project in file("."))
+  .settings(lookupM2Settings)
+  .settings(
+    scalaVersion := "2.12.5",
+    organization := "com.datastax.gatling.simcatalog",
+    name := "gatling-dse-simcatalog")
+  .settings(
+    addArtifact(
+      Artifact("gatling-dse-simcatalog", "assembly"),
+      sbtassembly.AssemblyKeys.assembly))
+
+lazy val assemblyLauncher = taskKey[Int]("Build an assembly containing a shell launcher for unix based systems")
 assemblyLauncher := {
   assembly.value
   "./src/make/launch-builder.sh" !
