@@ -11,7 +11,7 @@ resolvers ++= Seq(
 
 libraryDependencies ++= Seq(
   // Formerly in lib directory
-  "com.datastax.gatling.stress" %% "gatling-dse-stress" % "1.3.1",
+  "com.datastax.gatling.stress" %% "gatling-dse-stress" % "1.3.3",
 
   // From build.gradle
   "com.mashape.unirest" % "unirest-java" % "1.4.9",
@@ -101,10 +101,6 @@ lazy val root = (project in file("."))
     scalaVersion := "2.12.5",
     organization := "com.datastax.gatling.simcatalog",
     name := "gatling-dse-simcatalog")
-  .settings(
-    addArtifact(
-      Artifact("gatling-dse-simcatalog", "assembly"),
-      sbtassembly.AssemblyKeys.assembly))
 
 lazy val assemblyLauncher = taskKey[Int]("Build an assembly containing a shell launcher for unix based systems")
 assemblyLauncher := {
