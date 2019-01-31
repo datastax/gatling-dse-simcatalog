@@ -102,12 +102,6 @@ lazy val root = (project in file("."))
     organization := "com.datastax.gatling.simcatalog",
     name := "gatling-dse-simcatalog")
 
-//lazy val assemblyLauncher = taskKey[Int]("Build an assembly containing a shell launcher for unix based systems")
-//assemblyLauncher := {
-//  assembly.value
-//  "./src/make/launch-builder.sh" !
-//}
-
 val shellScript = """#!/usr/bin/env sh
 if [ -n "${JAVA_HOME}" ]; then
   JAVA="${JAVA_HOME}"/bin/java
