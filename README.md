@@ -4,13 +4,13 @@ The goal of the repo is to provide a sample of the [Gatling DSE Stress](https://
 # Using the Examples
 
 ## Building
-To build a jar run `sbt clean assemblyLauncher`.  The compiled jar will be found in `gatling-dse-simcatalog_2.12-1.2.3-SNAPSHOT.jar` and the executable app will be at `target/gatling-dse-sims`
+To build a jar run `sbt clean assembly`.  The compiled jar will be found in `gatling-dse-simcatalog_2.12-1.2.3-SNAPSHOT.jar` and the executable app will be at `target/scala-2.12/gatling-dse-sims`
 
 
 ## Running a Simulation
 First build the executable app using `sbt clean compile` then run the app with the path or name of wanted sim name `gatling-dse-sims run {SimName}`.  
 
-Example: `target/gatling-dse-sims run WriteOrderSimulation`
+Example: `target/scala-2.12/gatling-dse-sims run WriteOrderSimulation`
 
 
 ## Configuration
@@ -29,10 +29,10 @@ See: [Gatling DSE Stress Wiki](https://github.com/datastax/gatling-dse-stress/wi
 
 
 ### Listing Available Sims in Jar
-Run `target/gatling-dse-sims listSims` or `build/libs/gat
+Run `target/scala-2.12/gatling-dse-sims listSims` or `build/libs/gat
 
 ### Showing Default Configurations
-Run `target/gatling-dse-sims showConf <all, general, cassandra, simulations, gatling>`
+Run `target/scala-2.12/gatling-dse-sims showConf <all, general, cassandra, simulations, gatling>`
 
 
 # Requirements
