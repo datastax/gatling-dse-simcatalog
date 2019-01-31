@@ -1,4 +1,4 @@
-import scala.sys.process._
+//import scala.sys.process_
 
 scalacOptions ++= Seq("-target:jvm-1.8", "-Ybreak-cycles")
 
@@ -102,9 +102,29 @@ lazy val root = (project in file("."))
     organization := "com.datastax.gatling.simcatalog",
     name := "gatling-dse-simcatalog")
 
-lazy val assemblyLauncher = taskKey[Int]("Build an assembly containing a shell launcher for unix based systems")
-assemblyLauncher := {
-  assembly.value
-  "./src/make/launch-builder.sh" !
-}
+//lazy val assemblyLauncher = taskKey[Int]("Build an assembly containing a shell launcher for unix based systems")
+//assemblyLauncher := {
+//  assembly.value
+//  "./src/make/launch-builder.sh" !
+//}
 
+val shellScript = """#!/usr/bin/env sh
+if [ -n "${JAVA_HOME}" ]; then
+  JAVA="${JAVA_HOME}"/bin/java
+else
+  JAVA=java
+fi
+DEFAULT_JAVA_OPTS="-server"
+DEFAULT_JAVA_OPTS="${DEFAULT_JAVA_OPTS} -Xms2G -Xmx2G"
+DEFAULT_JAVA_OPTS="${DEFAULT_JAVA_OPTS} -XX:+UseG1GC -XX:MaxGCPauseMillis=30 -XX:G1HeapRegionSize=16m -XX:InitiatingHeapOccupancyPercent=75 -XX:+ParallelRefProcEnabled"
+DEFAULT_JAVA_OPTS="${DEFAULT_JAVA_OPTS} -XX:+PerfDisableSharedMem -XX:+AggressiveOpts -XX:+OptimizeStringConcat"
+DEFAULT_JAVA_OPTS="${DEFAULT_JAVA_OPTS} -XX:+HeapDumpOnOutOfMemoryError"
+DEFAULT_JAVA_OPTS="${DEFAULT_JAVA_OPTS} -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv6Addresses=false"
+DEFAULT_JAVA_OPTS="${DEFAULT_JAVA_OPTS} -XX:+UseTLAB -XX:+ResizeTLAB"
+exec "$JAVA" $DEFAULT_JAVA_OPTS $JAVA_OPTS -jar "$0" "$@"
+exit 1"""
+
+import sbtassembly.AssemblyPlugin.defaultShellScript
+assemblyOption in assembly := (assemblyOption in assembly).value.copy(prependShellScript = Some(shellScript.split("\n").toSeq))
+
+assemblyJarName in assembly := s"gatling-dse-sims"
