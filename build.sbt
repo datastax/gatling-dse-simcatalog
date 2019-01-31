@@ -1,5 +1,3 @@
-//import scala.sys.process_
-
 scalacOptions ++= Seq("-target:jvm-1.8", "-Ybreak-cycles")
 
 resolvers ++= Seq(
