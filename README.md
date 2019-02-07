@@ -39,7 +39,7 @@ Run `target/scala-2.12/gatling-dse-sims showConf <all, general, cassandra, simul
 - Java 1.8+
 - SBT
 
-Running `sbt assemblyLauncher` will download all of the needed libraries including Scala to your local machine.
+Running `sbt assembly` will download all of the needed libraries including Scala to your local machine.
 
 # Questions or Requests
 Please use the [Issues section](https://github.com/datastax/gatling-dse-stress/issues) to add any questions on usage or requests

@@ -120,3 +120,8 @@ import sbtassembly.AssemblyPlugin.defaultShellScript
 assemblyOption in assembly := (assemblyOption in assembly).value.copy(prependShellScript = Some(shellScript.split("\n").toSeq))
 
 assemblyJarName in assembly := s"gatling-dse-sims"
+
+lazy val assemblyLauncher = taskKey[Unit]("A deprecated packaging task.")
+assemblyLauncher := {
+  println("ERROR assemblyLauncher is no longer supported, please run the 'assembly' task instead")
+}
